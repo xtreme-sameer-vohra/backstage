@@ -22,7 +22,7 @@
 <script src="/js/medium-zoom.js"></script>
 <script src="/js/dismissable-banner.js"></script>
 <script src="/js/scroll-nav-to-view-in-docs.js"></script><link rel="stylesheet" href="/assets/css/styles.ab923a1d.css">
-<script src="/assets/js/runtime~main.531a0563.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1009a904.js" defer="defer"></script>
 <script src="/assets/js/main.ce3a44bf.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -51,16 +51,54 @@ provided clusters.</p>
 <p>Valid cluster locator methods are:</p>
 <ul>
 <li><a href="#catalog"><code>catalog</code></a></li>
-<li><a href="#localkubectlproxy"><code>localKubectlProxy</code></a></li>
 <li><a href="#config"><code>config</code></a></li>
 <li><a href="#gke"><code>gke</code></a></li>
+<li><a href="#localkubectlproxy"><code>localKubectlProxy</code></a></li>
 <li><a href="#custom-kubernetesclusterssupplier">custom <code>KubernetesClustersSupplier</code></a></li>
 </ul>
 <h4 class="anchor anchorWithStickyNavbar_LWe7" id="catalog"><code>catalog</code><a href="#catalog" class="hash-link" aria-label="Direct link to catalog" title="Direct link to catalog">​</a></h4>
-<p>This cluster locator method will read cluster information from the catalog.</p>
-<h4 class="anchor anchorWithStickyNavbar_LWe7" id="localkubectlproxy"><code>localKubectlProxy</code><a href="#localkubectlproxy" class="hash-link" aria-label="Direct link to localkubectlproxy" title="Direct link to localkubectlproxy">​</a></h4>
-<p>This cluster locator method will assume a locally running <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/#using-kubectl-to-start-a-proxy-server" target="_blank" rel="noopener noreferrer"><code>kubectl proxy</code></a> process using the default port (8001).</p>
-<p>NOTE: This cluster locator method is for local development only and should not be used in production.</p>
+<p>This cluster locator method will gather
+<a href="https://backstage.io/docs/features/software-catalog/system-model#resource" target="_blank" rel="noopener noreferrer">Resources</a>
+of
+<a href="https://backstage.io/docs/features/software-catalog/descriptor-format#spectype-required-4" target="_blank" rel="noopener noreferrer">type</a>
+<code>kubernetes-cluster</code> from the catalog and treat them as clusters for the
+purposes of the Kubernetes plugin. In order for a resource to be detected by
+this method, it must also have the following
+<a href="https://backstage.io/docs/features/software-catalog/descriptor-format#annotations-optional" target="_blank" rel="noopener noreferrer">annotations</a>
+(as seen
+<a href="https://github.com/backstage/backstage/blob/86baccb2d7d378baed74eaebf017c60b410986e5/plugins/kubernetes-backend/src/cluster-locator/CatalogClusterLocator.ts#L51-L61" target="_blank" rel="noopener noreferrer">here</a>
+in the code):</p>
+<ul>
+<li><a href="https://backstage.io/docs/reference/plugin-kubernetes-common.annotation_kubernetes_api_server/" target="_blank" rel="noopener noreferrer"><code>kubernetes.io/api-server</code></a>,
+denoting the base URL of the Kubernetes control plane</li>
+<li><a href="https://backstage.io/docs/reference/plugin-kubernetes-common.annotation_kubernetes_api_server_ca/" target="_blank" rel="noopener noreferrer"><code>kubernetes.io/api-server-certificate-authority</code></a>,
+containing a base64-encoded certificate authority bundle in PEM format;
+Backstage will check that the control plane presents a certificate signed by
+this authority.</li>
+<li><a href="https://backstage.io/docs/reference/plugin-kubernetes-common.annotation_kubernetes_auth_provider/" target="_blank" rel="noopener noreferrer"><code>kubernetes.io/auth-provider</code></a>,
+denoting the strategy to use to authenticate with the control plane.</li>
+</ul>
+<p>There are many other annotations that can be applied to a cluster resource to
+configure the way Backstage communicates, documented
+<a href="https://backstage.io/docs/reference/plugin-kubernetes-common#variables" target="_blank" rel="noopener noreferrer">here</a>
+in the API reference. Here is a YAML snippet illustrating an example of a
+cluster in the catalog:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#9CDCFE;--prism-background-color:#232323"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#9CDCFE;background-color:#232323"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#9CDCFE"><span class="token key atrule">apiVersion</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> backstage.io/v1alpha1</span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain"></span><span class="token key atrule">kind</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> Resource</span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain"></span><span class="token key atrule">metadata</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">  </span><span class="token key atrule">name</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> my</span><span class="token punctuation" style="color:rgb(212, 212, 212)">-</span><span class="token plain">cluster</span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">  </span><span class="token key atrule">annotations</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">    </span><span class="token key atrule">kubernetes.io/api-server</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(206, 145, 120)">&#x27;https://127.0.0.1:53725&#x27;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">    </span><span class="token key atrule">kubernetes.io/api-server-certificate-authority</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> </span><span class="token comment" style="color:rgb(106, 153, 85)"># base64-encoded CA</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">    </span><span class="token key atrule">kubernetes.io/auth-provider</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(206, 145, 120)">&#x27;oidc&#x27;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">    </span><span class="token key atrule">kubernetes.io/oidc-token-provider</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(206, 145, 120)">&#x27;microsoft&#x27;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">    </span><span class="token key atrule">kubernetes.io/skip-metrics-lookup</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(206, 145, 120)">&#x27;true&#x27;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain"></span><span class="token key atrule">spec</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">  </span><span class="token key atrule">type</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> kubernetes</span><span class="token punctuation" style="color:rgb(212, 212, 212)">-</span><span class="token plain">cluster</span><br></span><span class="token-line" style="color:#9CDCFE"><span class="token plain">  </span><span class="token key atrule">owner</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain"> user</span><span class="token punctuation" style="color:rgb(212, 212, 212)">:</span><span class="token plain">guest</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<p>Note that it is insecure to store a Kubernetes service account token in an
+annotation on a catalog entity (where it could easily be accidentally revealed
+by the catalog API) -- therefore there is no annotation corresponding to the
+<a href="#clustersserviceaccounttoken-optional"><code>serviceAccountToken</code> field</a> used by
+the <a href="#config"><code>config</code></a> cluster locator. Accordingly, the catalog cluster
+locator does not support the <a href="#clustersauthprovider"><code>serviceAccount</code></a> auth
+strategy.</p>
+<p>This method can be quite helpful when used in combination with an ingestion
+procedure like the
+<a href="https://backstage.io/docs/reference/plugin-catalog-backend-module-gcp.gkeentityprovider/" target="_blank" rel="noopener noreferrer"><code>GkeEntityProvider</code></a>
+(installation documented
+<a href="https://github.com/backstage/backstage/tree/master/plugins/catalog-backend-module-gcp#installation" target="_blank" rel="noopener noreferrer">here</a>)
+or the
+<a href="https://backstage.io/docs/reference/plugin-catalog-backend-module-aws.awseksclusterprocessor/" target="_blank" rel="noopener noreferrer"><code>AwsEKSClusterProcessor</code></a>
+to automatically update the set of clusters tracked by Backstage.</p>
 <h4 class="anchor anchorWithStickyNavbar_LWe7" id="config"><code>config</code><a href="#config" class="hash-link" aria-label="Direct link to config" title="Direct link to config">​</a></h4>
 <p>This cluster locator method will read cluster information from your app-config
 (see below).</p>
@@ -273,6 +311,9 @@ Kubernetes plugin.</p>
 <h5 class="anchor anchorWithStickyNavbar_LWe7" id="matchingresourcelabels-optional"><code>matchingResourceLabels</code> (optional)<a href="#matchingresourcelabels-optional" class="hash-link" aria-label="Direct link to matchingresourcelabels-optional" title="Direct link to matchingresourcelabels-optional">​</a></h5>
 <p>Array of key value labels used to filter out clusters which don&#x27;t have the matching
 <a href="https://cloud.google.com/resource-manager/docs/creating-managing-labels" target="_blank" rel="noopener noreferrer">resource labels</a>.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="localkubectlproxy"><code>localKubectlProxy</code><a href="#localkubectlproxy" class="hash-link" aria-label="Direct link to localkubectlproxy" title="Direct link to localkubectlproxy">​</a></h4>
+<p>This cluster locator method will assume a locally running <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/http-proxy-access-api/#using-kubectl-to-start-a-proxy-server" target="_blank" rel="noopener noreferrer"><code>kubectl proxy</code></a> process using the default port (8001).</p>
+<p>NOTE: This cluster locator method is for local development only and should not be used in production.</p>
 <h4 class="anchor anchorWithStickyNavbar_LWe7" id="custom-kubernetesclusterssupplier">Custom <code>KubernetesClustersSupplier</code><a href="#custom-kubernetesclusterssupplier" class="hash-link" aria-label="Direct link to custom-kubernetesclusterssupplier" title="Direct link to custom-kubernetesclusterssupplier">​</a></h4>
 <p>If the configuration-based cluster locators do not work for your use-case,
 it is also possible to implement a
