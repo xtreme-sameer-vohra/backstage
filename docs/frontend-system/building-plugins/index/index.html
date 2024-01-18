@@ -22,7 +22,7 @@
 <script src="/js/medium-zoom.js"></script>
 <script src="/js/dismissable-banner.js"></script>
 <script src="/js/scroll-nav-to-view-in-docs.js"></script><link rel="stylesheet" href="/assets/css/styles.3f5693f6.css">
-<script src="/assets/js/runtime~main.92b3bf01.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.9b2164d8.js" defer="defer"></script>
 <script src="/assets/js/main.4866504d.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -36,7 +36,7 @@ frontend <em>features</em>, and what you install to build up a Backstage fronten
 <p>This guide assumes that you already have a Backstage project set up. Even if you only want to develop a single plugin for publishing, we still recommend that you do so in a standard Backstage monorepo project, as you often end up needing multiple packages. For instructions on how to set up a new project, see our <a href="/docs/getting-started/#prerequisites">getting started</a> documentation.</p>
 <p>To create a frontend plugin, run <code>yarn new</code>, select <code>plugin</code>, and fill out the rest of the prompts. This will create a new package at <code>plugins/&lt;pluginId&gt;</code>, which will be the main entrypoint for your plugin.</p>
 <blockquote>
-<p><strong>NOT: The created plugin will currently be templated for use in the legacy frontend system, and you will need to replace the existing plugin wiring code.</strong></p>
+<p><strong>NOTE: The created plugin will currently be templated for use in the legacy frontend system, and you will need to replace the existing plugin wiring code.</strong></p>
 </blockquote>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="the-plugin-instance">The plugin instance<a href="#the-plugin-instance" class="hash-link" aria-label="Direct link to The plugin instance" title="Direct link to The plugin instance">​</a></h2>
 <p>The starting point of a frontend plugin is the <code>createPlugin</code> function, which accepts a single options object as its only parameter. It is imported from <code>@backstage/frontend-plugin-api</code>, which is where you will find most of the common APIs for building plugins.</p>
