@@ -22,7 +22,7 @@
 <script src="/js/medium-zoom.js"></script>
 <script src="/js/dismissable-banner.js"></script>
 <script src="/js/scroll-nav-to-view-in-docs.js"></script><link rel="stylesheet" href="/assets/css/styles.2c17d9a9.css">
-<script src="/assets/js/runtime~main.939eaec9.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.45c071f4.js" defer="defer"></script>
 <script src="/assets/js/main.bd1db549.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -32,7 +32,7 @@
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview">​</a></h2>
 <p>Utility APIs are pieces of standalone functionality, interfaces that can be requested by plugins to use. They are defined by a TypeScript interface as well as a reference (an &quot;API ref&quot;) used to access its implementation. They can be provided both by plugins and the core framework, and are themselves <a href="/docs/frontend-system/architecture/extensions">extensions</a> that can have inputs, be replaced, and be declaratively configured in your app-config.</p>
 <p>A common example of a utility API is a client interface to interact with the backend part of a plugin, such as the catalog client. Any frontend plugin can then request an implementation of that interface to make requests through.</p>
-<p>The following diagram shows a hypothetical application, which depends on two plugins and also provides some extra overrides. Note that both the plugins and the core framework provide utility APIs, and that they depended on each other. The app also chooses to use its overrides mechanism to supply a replacement implementation of one API, which takes precedence over the default one. Thus, all consumers of that API will be sure to get that new implementation provided to them.</p>
+<p>The following diagram shows a hypothetical application, which depends on two plugins and also provides some extra overrides. Note that both the plugins and the core framework provide utility APIs, and that they depend on each other. The app also chooses to use its overrides mechanism to supply a replacement implementation of one API, which takes precedence over the default one. Thus, all consumers of that API will be sure to get that new implementation provided to them.</p>
 <p><img loading="lazy" alt="frontend system utility apis diagram" src="/assets/images/architecture-utility-apis.drawio-177f450f76fe0ca670cb2f86c25179a8.svg" width="732" height="462" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="extension-structure">Extension structure<a href="#extension-structure" class="hash-link" aria-label="Direct link to Extension structure" title="Direct link to Extension structure">​</a></h2>
 <p>All utility APIs implement the <code>createApiExtension.factoryDataRef</code> output data type, and must attach exclusively to the <code>core</code> extension&#x27;s <code>apis</code> input no matter who provided them. These defaults are provided out of the box by the <code>createApiExtension</code> framework function.</p>
