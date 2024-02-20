@@ -107,6 +107,17 @@ Scope: The TechDocs plugin and related tooling
 
 These incubating project areas have shared ownership with @backstage/maintainers.
 
+### Notifications
+
+Team: @backstage/notifications-maintainers
+
+Scope: The Notifications and Signals plugins and libraries
+
+| Name        | Organization       | GitHub                                      | Discord      |
+| ----------- | ------------------ | ------------------------------------------- | ------------ |
+| Heikki      | OP Financial Group | [drodil](https://github.com/drodil)         | `deathammer` |
+| Marek Libra | RedHat             | [mareklibra](https://github.com/mareklibra) | `marekli`    |
+
 ### OpenAPI Tooling
 
 Team: @backstage/openapi-tooling-maintainers
