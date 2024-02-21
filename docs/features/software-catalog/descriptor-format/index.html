@@ -22,7 +22,7 @@
 <script src="/js/medium-zoom.js"></script>
 <script src="/js/dismissable-banner.js"></script>
 <script src="/js/scroll-nav-to-view-in-docs.js"></script><link rel="stylesheet" href="/assets/css/styles.f70dec51.css">
-<script src="/assets/js/runtime~main.e45df08b.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.b6cfcb81.js" defer="defer"></script>
 <script src="/assets/js/main.230c6e58.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -796,6 +796,33 @@ fields of this structure are also optional. The email would be a group email of
 some form, that the group may wish to be used for contacting them. The picture
 is expected to be a URL pointing to an image that&#x27;s representative of the group,
 and that a browser could fetch and render on a group page or similar.</p>
+<p>The fields of a profile are:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>displayName</code> (optional)</td><td>String</td><td>A human-readable name for the group.</td></tr><tr><td><code>email</code> (optional)</td><td>String</td><td>An email the group may wish to be used for contacting them.</td></tr><tr><td><code>picture</code> (optional)</td><td>String</td><td>A URL pointing to an image that&#x27;s representative of the group.</td></tr></tbody></table>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="specparent-optional"><code>spec.parent</code> [optional]<a href="#specparent-optional" class="hash-link" aria-label="Direct link to specparent-optional" title="Direct link to specparent-optional">​</a></h3>
 <p>The immediate parent group in the hierarchy, if any. Not all groups must have a
 parent; the catalog supports multi-root hierarchies. Groups may however not have
@@ -899,6 +926,33 @@ fields of this structure are also optional. The email would be a primary email
 of some form, that the user may wish to be used for contacting them. The picture
 is expected to be a URL pointing to an image that&#x27;s representative of the user,
 and that a browser could fetch and render on a profile page or similar.</p>
+<p>The fields of a profile are:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>displayName</code> (optional)</td><td>String</td><td>A human-readable name for the user.</td></tr><tr><td><code>email</code> (optional)</td><td>String</td><td>An email the user may wish to be used for contacting them.</td></tr><tr><td><code>picture</code> (optional)</td><td>String</td><td>A URL pointing to an image that&#x27;s representative of the user.</td></tr></tbody></table>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="specmemberof-required"><code>spec.memberOf</code> [required]<a href="#specmemberof-required" class="hash-link" aria-label="Direct link to specmemberof-required" title="Direct link to specmemberof-required">​</a></h3>
 <p>The list of groups that the user is a direct member of (i.e., no transitive
 memberships are listed here). The list must be present, but may be empty if the
