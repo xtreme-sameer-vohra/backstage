@@ -31,7 +31,10 @@ import {
 } from '@backstage/plugin-scaffolder-node';
 import { examples } from './template.examples';
 import yaml from 'yaml';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 jest.mock('@backstage/plugin-scaffolder-node', () => ({
   ...jest.requireActual('@backstage/plugin-scaffolder-node'),
@@ -63,6 +66,8 @@ describe('fetch:template examples', () => {
 
   const logger = getVoidLogger();
 
+  const credentials = mockCredentials.user();
+
   const mockContext = (input: any) => ({
     templateInfo: {
       baseUrl: 'base-url',
@@ -73,10 +78,10 @@ describe('fetch:template examples', () => {
     logStream: new PassThrough(),
     logger,
     workspacePath,
-
     async createTemporaryDirectory() {
       return fs.mkdtemp(mockDir.resolve('tmp-'));
     },
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   });
 
   beforeEach(() => {

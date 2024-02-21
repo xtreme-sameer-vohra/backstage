@@ -20,6 +20,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -55,6 +56,8 @@ describe('github:deployKey:create', () => {
   const integrations = ScmIntegrations.fromConfig(config);
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'github.com?repo=repository&owner=owner',
@@ -67,6 +70,7 @@ describe('github:deployKey:create', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

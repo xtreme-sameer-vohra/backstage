@@ -18,7 +18,10 @@ import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { Writable } from 'stream';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 import { createGitlabRepoPushAction } from './gitlabRepoPush';
 
 // Make sure root logger is initialized ahead of FS mock
@@ -93,6 +96,9 @@ describe('createGitLabCommit', () => {
           'foo.txt': 'Hello there!',
         },
       });
+
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -100,7 +106,9 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Branches.create).toHaveBeenCalledTimes(0);
@@ -139,6 +147,8 @@ describe('createGitLabCommit', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -146,6 +156,7 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -183,6 +194,8 @@ describe('createGitLabCommit', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -190,6 +203,7 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -227,6 +241,8 @@ describe('createGitLabCommit', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -234,6 +250,7 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -276,6 +293,8 @@ describe('createGitLabCommit', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -283,6 +302,7 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
 
       await instance.handler(ctx);
@@ -325,6 +345,8 @@ describe('createGitLabCommit', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -332,6 +354,7 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
 
       await instance.handler(ctx);
@@ -366,6 +389,8 @@ describe('createGitLabCommit', () => {
         commitAction: 'create',
       };
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -373,6 +398,7 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
 
       await expect(instance.handler(ctx)).rejects.toThrow(
@@ -398,6 +424,9 @@ describe('createGitLabCommit', () => {
           'foo.txt': 'Hello there!',
         },
       });
+
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -405,7 +434,9 @@ describe('createGitLabCommit', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Branches.create).toHaveBeenCalledWith(

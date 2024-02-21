@@ -34,7 +34,10 @@ import {
   ActionContext,
   TemplateAction,
 } from '@backstage/plugin-scaffolder-node';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 type FetchTemplateInput = ReturnType<
   typeof createFetchTemplateAction
@@ -61,6 +64,8 @@ describe('fetch:template', () => {
 
   const logger = getVoidLogger();
 
+  const credentials = mockCredentials.user();
+
   const mockContext = (inputPatch: Partial<FetchTemplateInput> = {}) => ({
     templateInfo: {
       baseUrl: 'base-url',
@@ -81,6 +86,7 @@ describe('fetch:template', () => {
     async createTemporaryDirectory() {
       return fs.mkdtemp(mockDir.resolve('tmp-'));
     },
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   });
 
   beforeEach(() => {

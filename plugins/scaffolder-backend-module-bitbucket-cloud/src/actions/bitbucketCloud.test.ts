@@ -29,7 +29,10 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
 import { createPublishBitbucketCloudAction } from './bitbucketCloud';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
+import {
+  mockCredentials,
+  setupRequestMockHandlers,
+} from '@backstage/backend-test-utils';
 import { ScmIntegrations } from '@backstage/integration';
 import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
@@ -50,6 +53,7 @@ describe('publish:bitbucketCloud', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishBitbucketCloudAction({ integrations, config });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       repoUrl: 'bitbucket.org?workspace=workspace&project=project&repo=repo',
@@ -60,6 +64,7 @@ describe('publish:bitbucketCloud', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   const server = setupServer();
   setupRequestMockHandlers(server);

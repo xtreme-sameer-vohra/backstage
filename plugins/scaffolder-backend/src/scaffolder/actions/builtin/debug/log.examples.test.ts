@@ -20,7 +20,10 @@ import { createDebugLogAction } from './log';
 import { join } from 'path';
 import yaml from 'yaml';
 import { examples } from './log.examples';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('debug:log examples', () => {
   const logStream = {
@@ -30,6 +33,8 @@ describe('debug:log examples', () => {
   const mockDir = createMockDirectory();
   const workspacePath = mockDir.resolve('workspace');
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {},
     baseUrl: 'somebase',
@@ -38,6 +43,7 @@ describe('debug:log examples', () => {
     logStream,
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   const action = createDebugLogAction();

@@ -24,6 +24,7 @@ import {
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { PassThrough } from 'stream';
 import { createGithubAutolinksAction } from './githubAutolinks';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -53,12 +54,14 @@ describe('github:autolinks:create', () => {
   const integrations = ScmIntegrations.fromConfig(config);
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any, any>;
+  const credentials = mockCredentials.user();
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   it('should call the githubApis for creating alphanumeric autolink reference', async () => {

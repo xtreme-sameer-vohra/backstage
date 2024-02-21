@@ -19,7 +19,10 @@ import { ScmIntegrations } from '@backstage/integration';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { Writable } from 'stream';
 import { createPublishGitlabMergeRequestAction } from './gitlabMergeRequest';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 // Make sure root logger is initialized ahead of FS mock
 createRootLogger();
@@ -116,6 +119,9 @@ describe('createGitLabMergeRequest', () => {
           irrelevant: { 'bar.txt': 'Nothing to see here' },
         },
       });
+
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -123,7 +129,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Projects.show).not.toHaveBeenCalled();
@@ -158,6 +166,9 @@ describe('createGitLabMergeRequest', () => {
           irrelevant: { 'bar.txt': 'Nothing to see here' },
         },
       });
+
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -165,6 +176,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -203,6 +215,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -210,6 +224,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -238,6 +253,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -245,6 +262,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -279,6 +297,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -286,6 +306,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
       await instance.handler(ctx);
 
@@ -319,6 +340,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -326,7 +349,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.MergeRequests.create).toHaveBeenCalledWith(
@@ -359,6 +384,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -366,7 +393,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.MergeRequests.create).toHaveBeenCalledWith(
@@ -398,6 +427,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -405,7 +436,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.MergeRequests.create).toHaveBeenCalledWith(
@@ -433,6 +466,9 @@ describe('createGitLabMergeRequest', () => {
           irrelevant: { 'bar.txt': 'Nothing to see here' },
         },
       });
+
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -440,7 +476,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Commits.create).toHaveBeenCalledWith(
@@ -482,6 +520,9 @@ describe('createGitLabMergeRequest', () => {
           irrelevant: { 'bar.txt': 'Nothing to see here' },
         },
       });
+
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -489,7 +530,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Commits.create).toHaveBeenCalledWith(
@@ -526,6 +569,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -533,7 +578,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Commits.create).toHaveBeenCalledWith(
@@ -568,6 +615,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -575,7 +624,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Commits.create).toHaveBeenCalledWith(
@@ -610,6 +661,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -617,7 +670,9 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
+
       await instance.handler(ctx);
 
       expect(mockGitlabClient.Commits.create).toHaveBeenCalledWith(
@@ -655,6 +710,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -662,6 +719,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
 
       await instance.handler(ctx);
@@ -700,6 +758,8 @@ describe('createGitLabMergeRequest', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -707,6 +767,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
 
       await instance.handler(ctx);
@@ -737,6 +798,8 @@ describe('createGitLabMergeRequest', () => {
         commitAction: 'create',
       };
 
+      const credentials = mockCredentials.user();
+
       const ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -744,6 +807,7 @@ describe('createGitLabMergeRequest', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
 
       await expect(instance.handler(ctx)).rejects.toThrow(

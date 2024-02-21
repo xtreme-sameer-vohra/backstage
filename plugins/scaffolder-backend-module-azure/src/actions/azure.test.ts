@@ -38,6 +38,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { WebApi } from 'azure-devops-node-api';
 import { PassThrough } from 'stream';
 import { initRepoAndPush } from '@backstage/plugin-scaffolder-node';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 describe('publish:azure', () => {
   const config = new ConfigReader({
@@ -54,6 +55,7 @@ describe('publish:azure', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishAzureAction({ integrations, config });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       repoUrl: 'dev.azure.com?repo=repo&owner=owner&organization=org',
@@ -63,6 +65,7 @@ describe('publish:azure', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   const mockGitClient = {

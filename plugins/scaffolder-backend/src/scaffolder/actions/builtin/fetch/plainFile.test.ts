@@ -27,6 +27,7 @@ import { ScmIntegrations } from '@backstage/integration';
 import { fetchFile } from '@backstage/plugin-scaffolder-node';
 import { createFetchPlainFileAction } from './plainFile';
 import { PassThrough } from 'stream';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 describe('fetch:plain:file', () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -47,12 +48,16 @@ describe('fetch:plain:file', () => {
   });
 
   const action = createFetchPlainFileAction({ integrations, reader });
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   it('should disallow a target path outside working directory', async () => {

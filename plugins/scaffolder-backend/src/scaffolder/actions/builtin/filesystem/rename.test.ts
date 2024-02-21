@@ -19,7 +19,10 @@ import { createFilesystemRenameAction } from './rename';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
 import fs from 'fs-extra';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('fs:rename', () => {
   const action = createFilesystemRenameAction();
@@ -41,6 +44,9 @@ describe('fs:rename', () => {
       to: 'brand-new-folder',
     },
   ];
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       files: mockInputFiles,
@@ -50,6 +56,7 @@ describe('fs:rename', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

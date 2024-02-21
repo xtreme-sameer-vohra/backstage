@@ -47,6 +47,7 @@
     "yaml": "^2.0.0"
   },
   "devDependencies": {
+    "@backstage/backend-test-utils": "workspace:^",
     "@backstage/cli": "workspace:^"
   },
   "files": [

@@ -33,7 +33,10 @@ import {
   PermissionEvaluator,
 } from '@backstage/plugin-permission-common';
 import { RESOURCE_TYPE_SCAFFOLDER_ACTION } from '@backstage/plugin-scaffolder-common/alpha';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 import stripAnsi from 'strip-ansi';
 
 describe('NunjucksWorkflowRunner', () => {
@@ -57,6 +60,13 @@ describe('NunjucksWorkflowRunner', () => {
     }),
   );
 
+  const credentials = mockCredentials.user();
+
+  const token = mockCredentials.service.token({
+    onBehalfOf: credentials,
+    targetPluginId: 'catalog',
+  });
+
   const createMockTaskWithSpec = (
     spec: TaskSpec,
     secrets?: TaskSecrets,
@@ -70,6 +80,7 @@ describe('NunjucksWorkflowRunner', () => {
     emitLog: fakeTaskLog,
     cancelSignal: new AbortController().signal,
     getWorkspaceName: () => Promise.resolve('test-workspace'),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   });
 
   function expectTaskLog(message: string) {
@@ -275,7 +286,6 @@ describe('NunjucksWorkflowRunner', () => {
     });
 
     it('should pass token through', async () => {
-      const fakeToken = 'secret';
       const task = createMockTaskWithSpec(
         {
           apiVersion: 'scaffolder.backstage.io/v1beta3',
@@ -291,14 +301,15 @@ describe('NunjucksWorkflowRunner', () => {
           ],
         },
         {
-          backstageToken: fakeToken,
+          backstageToken: token,
+          initiatorCredentials: JSON.stringify(credentials),
         },
       );
 
       await runner.execute(task);
 
       expect(fakeActionHandler.mock.calls[0][0].secrets).toEqual(
-        expect.objectContaining({ backstageToken: fakeToken }),
+        expect.objectContaining({ backstageToken: token }),
       );
     });
   });
@@ -1103,7 +1114,7 @@ describe('NunjucksWorkflowRunner', () => {
           ],
         },
         {
-          backstageToken: 'secret',
+          backstageToken: token,
         },
         true,
       );

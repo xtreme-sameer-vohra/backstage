@@ -30,7 +30,10 @@ import path from 'path';
 import { createPublishGerritAction } from './gerrit';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
+import {
+  mockCredentials,
+  setupRequestMockHandlers,
+} from '@backstage/backend-test-utils';
 import { ScmIntegrations } from '@backstage/integration';
 import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
@@ -53,6 +56,7 @@ describe('publish:gerrit', () => {
   const description = 'for the lols';
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishGerritAction({ integrations, config });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       repoUrl:
@@ -64,6 +68,7 @@ describe('publish:gerrit', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   const server = setupServer();
   setupRequestMockHandlers(server);

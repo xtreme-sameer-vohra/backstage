@@ -24,6 +24,7 @@ import { PassThrough } from 'stream';
 import { createRunYeomanAction } from './yeoman';
 import type { ActionContext } from '@backstage/plugin-scaffolder-node';
 import { JsonObject } from '@backstage/types';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 describe('run:yeoman', () => {
   const mockTmpDir = os.tmpdir();
@@ -35,6 +36,8 @@ describe('run:yeoman', () => {
   }>;
 
   const action = createRunYeomanAction();
+
+  const credentials = mockCredentials.user();
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -57,6 +60,7 @@ describe('run:yeoman', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn().mockResolvedValue(mockTmpDir),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
 
     await action.handler(mockContext);

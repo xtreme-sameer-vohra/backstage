@@ -21,7 +21,10 @@ import { PassThrough } from 'stream';
 import fs from 'fs-extra';
 import yaml from 'yaml';
 import { examples } from './rename.examples';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('fs:rename examples', () => {
   const action = createFilesystemRenameAction();
@@ -30,6 +33,8 @@ describe('fs:rename examples', () => {
 
   const mockDir = createMockDirectory();
   const workspacePath = resolvePath(mockDir.path, 'workspace');
+
+  const credentials = mockCredentials.user();
 
   const mockContext = {
     input: {
@@ -40,6 +45,7 @@ describe('fs:rename examples', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

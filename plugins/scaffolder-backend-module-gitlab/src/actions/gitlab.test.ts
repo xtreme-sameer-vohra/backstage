@@ -32,6 +32,7 @@ import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
 import { initRepoAndPush } from '@backstage/plugin-scaffolder-node';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockGitlabClient = {
   Namespaces: {
@@ -83,6 +84,9 @@ describe('publish:gitlab', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishGitlabAction({ integrations, config });
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -96,7 +100,9 @@ describe('publish:gitlab', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
+
   const mockContextWithSettings = {
     input: {
       repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -113,6 +119,7 @@ describe('publish:gitlab', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   const mockContextWithBranches = {
     input: {
@@ -140,6 +147,7 @@ describe('publish:gitlab', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   const mockContextWithVariables = {
     input: {
@@ -160,6 +168,7 @@ describe('publish:gitlab', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

@@ -20,6 +20,7 @@ import { createGitlabIssueAction, IssueType } from './createGitlabIssueAction';
 import { ConfigReader } from '@backstage/core-app-api';
 import { ScmIntegrations } from '@backstage/integration';
 import { advanceTo, clear } from 'jest-date-mock';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockGitlabClient = {
   Issues: {
@@ -60,6 +61,7 @@ describe('gitlab:issues:create', () => {
   const action = createGitlabIssueAction({ integrations });
 
   it('should return a Gitlab issue when called with minimal input params', async () => {
+    const credentials = mockCredentials.user();
     const mockContext = {
       input: {
         repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -71,6 +73,7 @@ describe('gitlab:issues:create', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn(),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
 
     mockGitlabClient.Issues.create.mockResolvedValue({
@@ -109,6 +112,7 @@ describe('gitlab:issues:create', () => {
   });
 
   it('should return a Gitlab issue when called with oAuth Token', async () => {
+    const credentials = mockCredentials.user();
     const mockContext = {
       input: {
         repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -121,6 +125,7 @@ describe('gitlab:issues:create', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn(),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
 
     mockGitlabClient.Issues.create.mockResolvedValue({
@@ -159,6 +164,8 @@ describe('gitlab:issues:create', () => {
   });
 
   it('should return a Gitlab issue when called with several input params', async () => {
+    const credentials = mockCredentials.user();
+
     const mockContext = {
       input: {
         repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -177,6 +184,7 @@ describe('gitlab:issues:create', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn(),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
 
     mockGitlabClient.Issues.create.mockResolvedValue({

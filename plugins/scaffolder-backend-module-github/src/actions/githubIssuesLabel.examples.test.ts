@@ -27,6 +27,7 @@ import { createGithubIssuesLabelAction } from './githubIssuesLabel';
 import yaml from 'yaml';
 import { examples } from './githubIssuesLabel.examples';
 import { getOctokitOptions } from './helpers';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 jest.mock('./helpers', () => {
   return {
@@ -64,12 +65,15 @@ describe('github:issues:label examples', () => {
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

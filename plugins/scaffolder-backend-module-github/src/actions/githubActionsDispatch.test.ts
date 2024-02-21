@@ -24,6 +24,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { PassThrough } from 'stream';
 import { createGithubActionsDispatchAction } from './githubActionsDispatch';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -54,6 +55,8 @@ describe('github:actions:dispatch', () => {
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'github.com?repo=repo&owner=owner',
@@ -65,6 +68,7 @@ describe('github:actions:dispatch', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

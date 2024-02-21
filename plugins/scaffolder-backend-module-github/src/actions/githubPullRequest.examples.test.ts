@@ -26,7 +26,10 @@ import { PassThrough } from 'stream';
 import { createPublishGithubPullRequestAction } from './githubPullRequest';
 import yaml from 'yaml';
 import { examples } from './githubPullRequest.examples';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -57,12 +60,15 @@ describe('publish:github:pull-request examples', () => {
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   let fakeClient: {
     createPullRequest: jest.Mock;

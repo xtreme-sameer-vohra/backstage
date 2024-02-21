@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
+import {
+  mockCredentials,
+  setupRequestMockHandlers,
+} from '@backstage/backend-test-utils';
 import { ConfigReader } from '@backstage/config';
 import { InputError } from '@backstage/errors';
 import { ActionContext } from '@backstage/plugin-scaffolder-node';
@@ -36,6 +39,8 @@ describe('sentry:project:create action', () => {
     }),
   });
 
+  const credentials = mockCredentials.user();
+
   const getActionContext = (): ActionContext<{
     organizationSlug: string;
     teamSlug: string;
@@ -54,6 +59,7 @@ describe('sentry:project:create action', () => {
       authToken: randomBytes(5).toString('hex'),
     },
     output: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   });
 
   it('should request sentry project create with specified parameters.', async () => {

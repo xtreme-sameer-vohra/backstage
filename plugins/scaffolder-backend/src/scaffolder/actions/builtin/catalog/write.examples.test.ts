@@ -27,9 +27,12 @@ import { createCatalogWriteAction } from './write';
 import { resolve as resolvePath } from 'path';
 import * as yaml from 'yaml';
 import { examples } from './write.examples';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 describe('catalog:write', () => {
   const action = createCatalogWriteAction();
+
+  const credentials = mockCredentials.user();
 
   const mockContext = {
     workspacePath: os.tmpdir(),
@@ -37,6 +40,7 @@ describe('catalog:write', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

@@ -21,6 +21,7 @@ import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import {
   createMockDirectory,
+  mockCredentials,
   setupRequestMockHandlers,
 } from '@backstage/backend-test-utils';
 import type { ActionContext } from '@backstage/plugin-scaffolder-node';
@@ -69,6 +70,7 @@ describe('confluence:transform:markdown', () => {
       }),
       search: jest.fn(),
     };
+    const credentials = mockCredentials.user();
     mockContext = {
       input: {
         confluenceUrls: [
@@ -82,6 +84,7 @@ describe('confluence:transform:markdown', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn(),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
 
     mockDir.setContent({ 'workspace/mkdocs.yml': 'File contents' });

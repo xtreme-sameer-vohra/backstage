@@ -69,6 +69,7 @@ import {
 import { PassThrough } from 'stream';
 import { enableBranchProtectionOnDefaultRepoBranch } from './gitHelpers';
 import { createGithubRepoPushAction } from './githubRepoPush';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const initRepoAndPushMocked = initRepoAndPush as jest.Mock<
   Promise<{ commitHash: string }>
@@ -103,6 +104,8 @@ describe('github:repo:push', () => {
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'github.com?repo=repository&owner=owner',
@@ -115,6 +118,7 @@ describe('github:repo:push', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

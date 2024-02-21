@@ -22,6 +22,7 @@ import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import { createCatalogRegisterAction } from './register';
 import { Entity } from '@backstage/catalog-model';
+import { mockCredentials, mockServices } from '@backstage/backend-test-utils';
 
 describe('catalog:register', () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -40,6 +41,14 @@ describe('catalog:register', () => {
   const action = createCatalogRegisterAction({
     integrations,
     catalogClient: catalogClient as unknown as CatalogApi,
+    auth: mockServices.auth(),
+  });
+
+  const credentials = mockCredentials.user();
+
+  const token = mockCredentials.service.token({
+    onBehalfOf: credentials,
+    targetPluginId: 'catalog',
   });
 
   const mockContext = {
@@ -48,6 +57,7 @@ describe('catalog:register', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   beforeEach(() => {
     jest.resetAllMocks();
@@ -95,7 +105,7 @@ describe('catalog:register', () => {
         type: 'url',
         target: 'http://foo/var',
       },
-      {},
+      { token },
     );
     expect(addLocation).toHaveBeenNthCalledWith(
       2,
@@ -104,7 +114,7 @@ describe('catalog:register', () => {
         type: 'url',
         target: 'http://foo/var',
       },
-      {},
+      { token },
     );
 
     expect(mockContext.output).toHaveBeenCalledWith(
@@ -281,7 +291,7 @@ describe('catalog:register', () => {
         type: 'url',
         target: 'http://foo/var',
       },
-      {},
+      { token },
     );
     expect(addLocation).toHaveBeenNthCalledWith(
       2,
@@ -290,7 +300,7 @@ describe('catalog:register', () => {
         type: 'url',
         target: 'http://foo/var',
       },
-      {},
+      { token },
     );
 
     expect(mockContext.output).toHaveBeenCalledWith(
@@ -327,7 +337,7 @@ describe('catalog:register', () => {
         type: 'url',
         target: 'http://foo/var',
       },
-      {},
+      { token },
     );
     expect(addLocation).toHaveBeenNthCalledWith(
       2,
@@ -336,7 +346,7 @@ describe('catalog:register', () => {
         type: 'url',
         target: 'http://foo/var',
       },
-      {},
+      { token },
     );
 
     expect(mockContext.output).toHaveBeenCalledWith(

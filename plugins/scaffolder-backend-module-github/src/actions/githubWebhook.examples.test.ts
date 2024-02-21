@@ -25,6 +25,7 @@ import { PassThrough } from 'stream';
 import { createGithubWebhookAction } from './githubWebhook';
 import yaml from 'yaml';
 import { examples } from './githubWebhook.examples';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -56,12 +57,15 @@ describe('github:webhook examples', () => {
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

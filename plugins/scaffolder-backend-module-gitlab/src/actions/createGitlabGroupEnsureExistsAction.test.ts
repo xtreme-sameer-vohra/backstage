@@ -19,6 +19,7 @@ import { createGitlabGroupEnsureExistsAction } from './createGitlabGroupEnsureEx
 import { getVoidLogger } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/core-app-api';
 import { ScmIntegrations } from '@backstage/integration';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockGitlabClient = {
   Groups: {
@@ -35,12 +36,15 @@ jest.mock('@gitbeaker/node', () => ({
 }));
 
 describe('gitlab:group:ensureExists', () => {
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   afterEach(() => {

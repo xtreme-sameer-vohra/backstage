@@ -23,6 +23,7 @@ import { WebApi } from 'azure-devops-node-api';
 import { PassThrough } from 'stream';
 import { initRepoAndPush } from '@backstage/plugin-scaffolder-node';
 import { examples } from './azure.examples';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 jest.mock('azure-devops-node-api', () => ({
   WebApi: jest.fn(),
@@ -55,12 +56,14 @@ describe('publish:azure examples', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishAzureAction({ integrations, config });
+  const credentials = mockCredentials.user();
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   const mockGitClient = {

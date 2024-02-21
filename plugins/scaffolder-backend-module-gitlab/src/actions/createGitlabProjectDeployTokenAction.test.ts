@@ -19,6 +19,7 @@ import { ScmIntegrations } from '@backstage/integration';
 import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockGitlabClient = {
   ProjectDeployTokens: {
@@ -52,6 +53,9 @@ describe('gitlab:create-deploy-token', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createGitlabProjectDeployTokenAction({ integrations });
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -65,6 +69,7 @@ describe('gitlab:create-deploy-token', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

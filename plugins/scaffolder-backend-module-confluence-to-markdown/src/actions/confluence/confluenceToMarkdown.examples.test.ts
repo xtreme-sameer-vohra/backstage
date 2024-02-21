@@ -21,6 +21,7 @@ import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import {
   createMockDirectory,
+  mockCredentials,
   setupRequestMockHandlers,
 } from '@backstage/backend-test-utils';
 import { rest } from 'msw';
@@ -71,6 +72,7 @@ describe('confluence:transform:markdown examples', () => {
       }),
       search: jest.fn(),
     };
+    const credentials = mockCredentials.user();
     mockContext = {
       input: yaml.parse(examples[0].example).steps[0].input,
       workspacePath,
@@ -78,6 +80,7 @@ describe('confluence:transform:markdown examples', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn(),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
 
     mockDir.setContent({ 'workspace/mkdocs.yml': 'File contents' });

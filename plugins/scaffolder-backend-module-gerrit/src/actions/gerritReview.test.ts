@@ -27,6 +27,7 @@ import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
 import { commitAndPushRepo } from '@backstage/plugin-scaffolder-node';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 describe('publish:gerrit:review', () => {
   const config = new ConfigReader({
@@ -43,6 +44,7 @@ describe('publish:gerrit:review', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishGerritReviewAction({ integrations, config });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       repoUrl:
@@ -54,6 +56,7 @@ describe('publish:gerrit:review', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

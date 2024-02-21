@@ -27,7 +27,10 @@ import {
 import fs from 'fs-extra';
 import { Writable } from 'stream';
 import { createPublishGithubPullRequestAction } from './githubPullRequest';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 // Make sure root logger is initialized ahead of FS mock
 createRootLogger();
@@ -131,6 +134,8 @@ describe('createPublishGithubPullRequestAction', () => {
         [workspacePath]: { 'file.txt': 'Hello there!' },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -138,6 +143,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 
@@ -196,6 +202,8 @@ describe('createPublishGithubPullRequestAction', () => {
         [workspacePath]: { 'file.txt': 'Hello there!' },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -203,6 +211,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 
@@ -263,6 +272,8 @@ describe('createPublishGithubPullRequestAction', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -270,6 +281,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 
@@ -322,6 +334,8 @@ describe('createPublishGithubPullRequestAction', () => {
         [workspacePath]: { 'file.txt': 'Hello there!' },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -329,6 +343,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
     it('creates a pull request', async () => {
@@ -382,6 +397,8 @@ describe('createPublishGithubPullRequestAction', () => {
 
       mockDir.setContent({ [workspacePath]: {} });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -389,6 +406,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 
@@ -434,6 +452,8 @@ describe('createPublishGithubPullRequestAction', () => {
 
       mockDir.setContent({ [workspacePath]: {} });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -441,6 +461,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 
@@ -470,6 +491,8 @@ describe('createPublishGithubPullRequestAction', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -477,6 +500,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
     it('creates a pull request', async () => {
@@ -526,6 +550,8 @@ describe('createPublishGithubPullRequestAction', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -533,6 +559,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
     it('creates a pull request', async () => {
@@ -592,6 +619,8 @@ describe('createPublishGithubPullRequestAction', () => {
         },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -599,6 +628,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
     it('creates a pull request', async () => {
@@ -653,6 +683,8 @@ describe('createPublishGithubPullRequestAction', () => {
         [workspacePath]: { 'file.txt': 'Hello there!' },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -660,6 +692,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 
@@ -705,6 +738,8 @@ describe('createPublishGithubPullRequestAction', () => {
         [workspacePath]: { 'file.txt': 'Hello there!' },
       });
 
+      const credentials = mockCredentials.user();
+
       ctx = {
         createTemporaryDirectory: jest.fn(),
         output: jest.fn(),
@@ -712,6 +747,7 @@ describe('createPublishGithubPullRequestAction', () => {
         logStream: new Writable(),
         input,
         workspacePath,
+        getInitiatorCredentials: () => Promise.resolve(credentials),
       };
     });
 

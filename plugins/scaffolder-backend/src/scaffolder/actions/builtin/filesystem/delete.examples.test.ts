@@ -21,7 +21,10 @@ import { resolve as resolvePath } from 'path';
 import fs from 'fs-extra';
 import yaml from 'yaml';
 import { examples } from './delete.examples';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('fs:delete examples', () => {
   const action = createFilesystemDeleteAction();
@@ -30,6 +33,8 @@ describe('fs:delete examples', () => {
   const workspacePath = resolvePath(mockDir.path, 'workspace');
 
   const files: string[] = yaml.parse(examples[0].example).steps[0].input.files;
+
+  const credentials = mockCredentials.user();
 
   const mockContext = {
     input: {
@@ -40,6 +45,7 @@ describe('fs:delete examples', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

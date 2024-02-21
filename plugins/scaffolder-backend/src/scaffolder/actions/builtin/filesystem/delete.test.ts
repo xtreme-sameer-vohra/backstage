@@ -19,7 +19,10 @@ import { createFilesystemDeleteAction } from './delete';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
 import fs from 'fs-extra';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('fs:delete', () => {
   const action = createFilesystemDeleteAction();
@@ -27,6 +30,7 @@ describe('fs:delete', () => {
   const mockDir = createMockDirectory();
   const workspacePath = resolvePath(mockDir.path, 'workspace');
 
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       files: ['unit-test-a.js', 'unit-test-b.js'],
@@ -36,6 +40,7 @@ describe('fs:delete', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

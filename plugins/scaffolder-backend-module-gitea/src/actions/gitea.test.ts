@@ -20,7 +20,10 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { createPublishGiteaAction } from './gitea';
 import { initRepoAndPush } from '@backstage/plugin-scaffolder-node';
 import { rest } from 'msw';
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
+import {
+  mockCredentials,
+  setupRequestMockHandlers,
+} from '@backstage/backend-test-utils';
 import { setupServer } from 'msw/node';
 
 jest.mock('@backstage/plugin-scaffolder-node', () => {
@@ -48,6 +51,7 @@ describe('publish:gitea', () => {
   const description = 'for the lols';
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishGiteaAction({ integrations, config });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       repoUrl: 'gitea.com?repo=repo&owner=owner',
@@ -58,6 +62,7 @@ describe('publish:gitea', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   const server = setupServer();

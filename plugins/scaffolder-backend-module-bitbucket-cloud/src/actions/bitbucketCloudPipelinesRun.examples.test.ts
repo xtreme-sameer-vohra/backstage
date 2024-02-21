@@ -23,7 +23,10 @@ import yaml from 'yaml';
 import { examples } from './bitbucketCloudPipelinesRun.examples';
 import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
+import {
+  mockCredentials,
+  setupRequestMockHandlers,
+} from '@backstage/backend-test-utils';
 
 describe('bitbucket:pipelines:run', () => {
   const config = new ConfigReader({
@@ -39,6 +42,7 @@ describe('bitbucket:pipelines:run', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createBitbucketPipelinesRunAction({ integrations });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {},
     workspacePath: 'wsp',
@@ -46,6 +50,7 @@ describe('bitbucket:pipelines:run', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   const responseJson = {
     repository: {

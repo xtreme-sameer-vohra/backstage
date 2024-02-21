@@ -38,7 +38,10 @@ import { resolve as resolvePath } from 'path';
 import { PassThrough } from 'stream';
 import { createFetchRailsAction } from './index';
 import { fetchContents } from '@backstage/plugin-scaffolder-node';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('fetch:rails', () => {
   const mockDir = createMockDirectory();
@@ -54,6 +57,9 @@ describe('fetch:rails', () => {
   );
 
   const mockTmpDir = mockDir.path;
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       url: 'https://rubyonrails.org/generator',
@@ -71,6 +77,7 @@ describe('fetch:rails', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn().mockResolvedValue(mockTmpDir),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   const mockReader: UrlReader = {

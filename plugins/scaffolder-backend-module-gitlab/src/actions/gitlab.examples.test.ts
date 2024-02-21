@@ -34,6 +34,7 @@ import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
 import { examples } from './gitlab.examples';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockGitlabClient = {
   Namespaces: {
@@ -76,6 +77,9 @@ describe('publish:gitlab', () => {
 
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createPublishGitlabAction({ integrations, config });
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -85,6 +89,7 @@ describe('publish:gitlab', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

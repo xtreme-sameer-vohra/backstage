@@ -21,6 +21,7 @@ import { ConfigReader } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
 import yaml from 'yaml';
 import { examples } from './gitHubEnvironment.examples';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -59,12 +60,15 @@ describe('github:environment:create examples', () => {
   const integrations = ScmIntegrations.fromConfig(config);
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

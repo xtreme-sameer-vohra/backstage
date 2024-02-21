@@ -19,7 +19,10 @@ import { createWaitAction } from './wait';
 import { Writable } from 'stream';
 import { examples } from './wait.examples';
 import yaml from 'yaml';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('debug:wait examples', () => {
   const action = createWaitAction();
@@ -31,6 +34,8 @@ describe('debug:wait examples', () => {
   const mockDir = createMockDirectory();
   const workspacePath = mockDir.resolve('workspace');
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {},
     baseUrl: 'somebase',
@@ -39,6 +44,7 @@ describe('debug:wait examples', () => {
     logStream,
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

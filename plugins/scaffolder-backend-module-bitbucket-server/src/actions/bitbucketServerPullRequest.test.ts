@@ -29,7 +29,10 @@ jest.mock('@backstage/plugin-scaffolder-node', () => {
 import { createPublishBitbucketServerPullRequestAction } from './bitbucketServerPullRequest';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
+import {
+  mockCredentials,
+  setupRequestMockHandlers,
+} from '@backstage/backend-test-utils';
 import { ScmIntegrations } from '@backstage/integration';
 import { ConfigReader } from '@backstage/config';
 import { getVoidLogger } from '@backstage/backend-common';
@@ -62,6 +65,7 @@ describe('publish:bitbucketServer:pull-request', () => {
     integrations,
     config,
   });
+  const credentials = mockCredentials.user();
   const mockContext = {
     input: {
       repoUrl: 'hosted.bitbucket.com?project=project&repo=repo',
@@ -76,6 +80,7 @@ describe('publish:bitbucketServer:pull-request', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
   const responseOfBranches = {
     size: 3,

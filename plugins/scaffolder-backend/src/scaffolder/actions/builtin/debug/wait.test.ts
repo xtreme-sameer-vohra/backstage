@@ -17,7 +17,10 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import { createWaitAction } from './wait';
 import { Writable } from 'stream';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 
 describe('debug:wait', () => {
   const action = createWaitAction();
@@ -29,6 +32,8 @@ describe('debug:wait', () => {
   const mockDir = createMockDirectory();
   const workspacePath = mockDir.resolve('workspace');
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {},
     baseUrl: 'somebase',
@@ -37,6 +42,7 @@ describe('debug:wait', () => {
     logStream,
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

@@ -22,6 +22,7 @@ import { createGitlabProjectAccessTokenAction } from './createGitlabProjectAcces
 import { examples } from './createGitlabProjectAccessTokenAction.examples';
 
 import { DateTime } from 'luxon';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 jest.mock('node-fetch');
 
@@ -59,6 +60,8 @@ describe('gitlab:projectAccessToken:create examples', () => {
   const integrations = ScmIntegrations.fromConfig(config);
   const action = createGitlabProjectAccessTokenAction({ integrations });
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     input: {
       repoUrl: 'gitlab.com?repo=repo&owner=owner',
@@ -68,6 +71,7 @@ describe('gitlab:projectAccessToken:create examples', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

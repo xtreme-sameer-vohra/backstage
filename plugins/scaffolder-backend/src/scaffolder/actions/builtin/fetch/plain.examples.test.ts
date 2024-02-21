@@ -25,6 +25,7 @@ import { createFetchPlainAction } from './plain';
 import { PassThrough } from 'stream';
 import { fetchContents } from '@backstage/plugin-scaffolder-node';
 import { examples } from './plain.examples';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 jest.mock('@backstage/plugin-scaffolder-node', () => ({
   ...jest.requireActual('@backstage/plugin-scaffolder-node'),
@@ -50,12 +51,16 @@ describe('fetch:plain examples', () => {
   });
 
   const action = createFetchPlainAction({ integrations, reader });
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   it('should fetch plain', async () => {

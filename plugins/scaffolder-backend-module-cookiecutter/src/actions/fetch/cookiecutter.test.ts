@@ -22,7 +22,10 @@ import {
 import { ConfigReader } from '@backstage/config';
 import { JsonObject } from '@backstage/types';
 import { ScmIntegrations } from '@backstage/integration';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockCredentials,
+} from '@backstage/backend-test-utils';
 import { PassThrough } from 'stream';
 import { createFetchCookiecutterAction } from './cookiecutter';
 import { join } from 'path';
@@ -88,6 +91,8 @@ describe('fetch:cookiecutter', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
+    const credentials = mockCredentials.user();
+
     mockContext = {
       input: {
         url: 'https://google.com/cookie/cutter',
@@ -105,6 +110,7 @@ describe('fetch:cookiecutter', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn().mockResolvedValue(mockTmpDir),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     };
     mockDir.setContent({ template: {} });
 

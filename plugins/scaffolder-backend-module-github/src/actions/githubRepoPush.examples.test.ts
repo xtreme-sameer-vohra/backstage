@@ -40,6 +40,7 @@ import { PassThrough } from 'stream';
 import { createGithubRepoPushAction } from './githubRepoPush';
 import { examples } from './githubRepoPush.examples';
 import yaml from 'yaml';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockGit = {
   init: jest.fn(),
@@ -102,12 +103,15 @@ describe('github:repo:push examples', () => {
   let githubCredentialsProvider: GithubCredentialsProvider;
   let action: TemplateAction<any>;
 
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   beforeEach(() => {

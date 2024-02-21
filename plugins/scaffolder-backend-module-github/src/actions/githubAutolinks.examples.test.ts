@@ -26,6 +26,7 @@ import { PassThrough } from 'stream';
 import { createGithubAutolinksAction } from './githubAutolinks';
 import { examples } from './githubAutolinks.examples';
 import yaml from 'yaml';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 const mockOctokit = {
   rest: {
@@ -70,6 +71,7 @@ describe('github:autolinks:create', () => {
         id: '1',
       },
     });
+    const credentials = mockCredentials.user();
     await action.handler({
       input,
       workspacePath: 'lol',
@@ -77,6 +79,7 @@ describe('github:autolinks:create', () => {
       logStream: new PassThrough(),
       output: jest.fn(),
       createTemporaryDirectory: jest.fn(),
+      getInitiatorCredentials: () => Promise.resolve(credentials),
     });
 
     expect(mockOctokit.rest.repos.createAutolink).toHaveBeenCalledWith({

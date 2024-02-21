@@ -27,6 +27,7 @@ import { ScmIntegrations } from '@backstage/integration';
 import { fetchContents } from '@backstage/plugin-scaffolder-node';
 import { createFetchPlainAction } from './plain';
 import { PassThrough } from 'stream';
+import { mockCredentials } from '@backstage/backend-test-utils';
 
 describe('fetch:plain', () => {
   const integrations = ScmIntegrations.fromConfig(
@@ -47,12 +48,16 @@ describe('fetch:plain', () => {
   });
 
   const action = createFetchPlainAction({ integrations, reader });
+
+  const credentials = mockCredentials.user();
+
   const mockContext = {
     workspacePath: os.tmpdir(),
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: () => Promise.resolve(credentials),
   };
 
   it('should disallow a target path outside working directory', async () => {
@@ -93,7 +98,6 @@ describe('fetch:plain', () => {
       input: {
         url: 'https://github.com/backstage/community/tree/main/backstage-community-sessions/assets',
         targetPath: 'lol',
-        token: 'mockToken',
       },
     });
 
