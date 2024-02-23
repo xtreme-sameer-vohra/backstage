@@ -114,6 +114,7 @@ class DefaultAuthService implements AuthService {
     private readonly disableDefaultAuthPolicy: boolean,
   ) {}
 
+  // allowLimitedAccess is currently ignored, since we currently always use the full user tokens
   async authenticate(token: string): Promise<BackstageCredentials> {
     const { sub, aud } = decodeJwt(token);
 
@@ -195,6 +196,27 @@ class DefaultAuthService implements AuthService {
           `Refused to issue service token for credential type '${type}'`,
         );
     }
+  }
+
+  async getLimitedUserToken(
+    credentials: BackstageCredentials<BackstageUserPrincipal>,
+  ): Promise<{ token: string; expiresAt: Date }> {
+    const internalCredentials = toInternalBackstageCredentials(credentials);
+
+    const { token } = internalCredentials;
+
+    if (!token) {
+      throw new AuthenticationError(
+        'User credentials is unexpectedly missing token',
+      );
+    }
+
+    const { exp } = decodeJwt(token);
+    if (!exp) {
+      throw new AuthenticationError('User token is missing expiration');
+    }
+
+    return { token, expiresAt: new Date(exp * 1000) };
   }
 }
 
