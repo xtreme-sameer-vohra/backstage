@@ -17,6 +17,7 @@
 import {
   AuthService,
   BackstageCredentials,
+  BackstageNonePrincipal,
   BackstagePrincipalTypes,
   BackstageServicePrincipal,
   BackstageUserPrincipal,
@@ -61,6 +62,12 @@ class AuthCompat implements AuthService {
     }
 
     return true;
+  }
+
+  async getNoneCredentials(): Promise<
+    BackstageCredentials<BackstageNonePrincipal>
+  > {
+    return createCredentialsWithNonePrincipal();
   }
 
   async getOwnServiceCredentials(): Promise<
