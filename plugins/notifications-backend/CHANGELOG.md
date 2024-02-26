@@ -1,5 +1,25 @@
 # @backstage/plugin-notifications-backend
 
+## 0.0.4-next.0
+
+### Patch Changes
+
+- 0fb419b: Updated dependency `uuid` to `^9.0.0`.
+  Updated dependency `@types/uuid` to `^9.0.0`.
+- 84af361: Migrated to using the new auth services.
+- Updated dependencies
+  - @backstage/plugin-events-node@0.3.0-next.0
+  - @backstage/backend-common@0.21.3-next.0
+  - @backstage/plugin-auth-node@0.4.8-next.0
+  - @backstage/errors@1.2.4-next.0
+  - @backstage/backend-plugin-api@0.6.13-next.0
+  - @backstage/plugin-notifications-node@0.1.0-next.0
+  - @backstage/plugin-signals-node@0.0.4-next.0
+  - @backstage/catalog-client@1.6.1-next.0
+  - @backstage/catalog-model@1.4.5-next.0
+  - @backstage/config@1.1.2-next.0
+  - @backstage/plugin-notifications-common@0.0.1
+
 ## 0.0.1
 
 ### Patch Changes

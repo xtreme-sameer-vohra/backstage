@@ -1,5 +1,18 @@
 # @backstage/core-components
 
+## 0.14.1-next.0
+
+### Patch Changes
+
+- ff33ee2: Removed hardcoded font-family on select input
+- ce73c3b: Removed the inline color from select icon to allow it to be colored via a theme
+- Updated dependencies
+  - @backstage/errors@1.2.4-next.0
+  - @backstage/config@1.1.2-next.0
+  - @backstage/core-plugin-api@1.9.1-next.0
+  - @backstage/theme@0.5.1
+  - @backstage/version-bridge@1.0.7
+
 ## 0.14.0
 
 ### Minor Changes
