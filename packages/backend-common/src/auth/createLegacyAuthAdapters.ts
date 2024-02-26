@@ -94,6 +94,7 @@ class AuthCompat implements AuthService {
       return createCredentialsWithUserPrincipal(
         identity.identity.userEntityRef,
         token,
+        this.#getJwtExpiration(token),
       );
     }
 
@@ -142,12 +143,15 @@ class AuthCompat implements AuthService {
       );
     }
 
+    return { token, expiresAt: this.#getJwtExpiration(token) };
+  }
+
+  #getJwtExpiration(token: string) {
     const { exp } = decodeJwt(token);
     if (!exp) {
       throw new AuthenticationError('User token is missing expiration');
     }
-
-    return { token, expiresAt: new Date(exp * 1000) };
+    return new Date(exp * 1000);
   }
 }
 
@@ -172,7 +176,11 @@ type RequestWithCredentials = Request & {
 };
 
 class HttpAuthCompat implements HttpAuthService {
-  constructor(private readonly auth: AuthService) {}
+  #auth: AuthService;
+
+  constructor(auth: AuthService) {
+    this.#auth = auth;
+  }
 
   async #extractCredentialsFromRequest(req: Request) {
     const token = getTokenFromRequest(req);
@@ -181,7 +189,7 @@ class HttpAuthCompat implements HttpAuthService {
     }
 
     const credentials = toInternalBackstageCredentials(
-      await this.auth.authenticate(token),
+      await this.#auth.authenticate(token),
     );
 
     return credentials;
@@ -196,39 +204,50 @@ class HttpAuthCompat implements HttpAuthService {
     req: Request,
     options?: {
       allow?: Array<TAllowed>;
-      allowedAuthMethods?: Array<'token' | 'cookie'>;
+      allowLimitedAccess?: boolean;
     },
   ): Promise<BackstageCredentials<BackstagePrincipalTypes[TAllowed]>> {
     const credentials = toInternalBackstageCredentials(
       await this.#getCredentials(req),
     );
 
-    const allowedPrincipalTypes = options?.allow;
-    const allowedAuthMethods: Array<'token' | 'cookie' | 'none'> =
-      options?.allowedAuthMethods ?? ['token'];
+    const allowed = options?.allow;
+    if (!allowed) {
+      return credentials as any;
+    }
 
-    if (
-      credentials.authMethod !== 'none' &&
-      !allowedAuthMethods.includes(credentials.authMethod)
-    ) {
+    if (this.#auth.isPrincipal(credentials, 'none')) {
+      if (allowed.includes('none' as TAllowed)) {
+        return credentials as any;
+      }
+
+      throw new AuthenticationError('Missing credentials');
+    } else if (this.#auth.isPrincipal(credentials, 'user')) {
+      if (allowed.includes('user' as TAllowed)) {
+        return credentials as any;
+      }
+
       throw new NotAllowedError(
-        `This endpoint does not allow the '${credentials.authMethod}' auth method`,
+        `This endpoint does not allow 'user' credentials`,
+      );
+    } else if (this.#auth.isPrincipal(credentials, 'service')) {
+      if (allowed.includes('service' as TAllowed)) {
+        return credentials as any;
+      }
+
+      throw new NotAllowedError(
+        `This endpoint does not allow 'service' credentials`,
       );
     }
 
-    if (
-      allowedPrincipalTypes &&
-      !allowedPrincipalTypes.includes(credentials.principal.type as TAllowed)
-    ) {
-      throw new NotAllowedError(
-        `This endpoint does not allow '${credentials.principal.type}' credentials`,
-      );
-    }
-
-    return credentials as any;
+    throw new NotAllowedError(
+      'Unknown principal type, this should never happen',
+    );
   }
 
-  async issueUserCookie(_res: Response): Promise<void> {}
+  async issueUserCookie(_res: Response): Promise<{ expiresAt: Date }> {
+    return { expiresAt: new Date(Date.now() + 3600_000) };
+  }
 }
 
 /**
